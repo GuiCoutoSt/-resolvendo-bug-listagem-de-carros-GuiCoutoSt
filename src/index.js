@@ -1,28 +1,35 @@
 import express from "express";
-import { uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 const app = express();
+
+const port = 3000;
+
+const cars = [];
+
 app.use(express.json());
 
-const cars = {};
+app.post("/cars", (req, res) => {
+  const { model, brand, year, color, plate } = req.body;
 
-app.post("localhost:3000/cars", (request, response) => {
-  const { model, brand, year, color, plate } = request.body;
-
-  cars.push({
+  let car = {
     model,
     brand,
     year,
     color,
     plate,
     id: uuidv4(),
-  });
+  };
 
-  return response.status(201);
+  cars.push(car);
+
+  return res.json(car).status(201);
 });
 
-app.get("localhost:3000/", (response) => {
-  response.sendStatus("Kenzie Cars");
+app.get("/cars", (request, response) => {
+  return response.json(cars);
 });
 
-app.listen("localhost:3000");
+app.listen(port, () => {
+  console.log(`App running on port ${port}`);
+});
